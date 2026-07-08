@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:3000
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1}
+      OPENAI_TEMPERATURE: ${OPENAI_TEMPERATURE:-0}
+      BATCH_SIZE: ${BATCH_SIZE:-20}
+      MAX_CONCURRENCY: ${MAX_CONCURRENCY:-5}
+      AI_MAX_RETRIES: ${AI_MAX_RETRIES:-3}
+      MAX_UPLOAD_ROWS: ${MAX_UPLOAD_ROWS:-100000}
+      MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-25}
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
